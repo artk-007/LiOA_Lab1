@@ -1,25 +1,39 @@
 ﻿// L2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+const int N = 1000;																	//
+int a[N][N], b[N][N], c[N][N], elem_c;
 int main(void)
 {
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
-
-	clock_t start, end; // объявляем переменные для определения времени выполнения
-
+	double start, end; // объявляем переменные для определения времени выполнения
+	
+	FILE* fp = NULL;
+	char name[] = "2.txt";
+	
 	int i = 0, j = 0, r;
-	int a[200][200], b[200][200], c[200][200], elem_c;
-	start = CLOCKS_PER_SEC;
+	
+	fp = fopen(name, "a");
+	if (fp != NULL) {
+		printf("Файл запущен удачно \n");
+	}
+	else {
+		printf("Ошибка!\n");
+		exit(0);
+	}
+	fprintf(fp, " %d Элементов - ",N);
+	
+
 	srand(time(NULL)); // инициализируем параметры генератора случайных чисел
-	while (i < 200)
+	while (i < N)
 	{
-		while (j < 200)
+		while (j < N)
 		{
 			a[i][j] = rand() % 100 + 1; // заполняем массив случайными числами
 			j++;
@@ -28,22 +42,23 @@ int main(void)
 	}
 	srand(time(NULL)); // инициализируем параметры генератора случайных чисел
 	i = 0; j = 0;
-	while (i < 200)
+	while (i < N)
 	{
-		while (j < 200)
+		while (j < N)
 		{
 			b[i][j] = rand() % 100 + 1; // заполняем массив случайными числами
 			j++;
 		}
 		i++;
 	}
-
-	for (i = 0; i < 200; i++)
+	start = clock();
+	
+	for (i = 0; i < N; i++)
 	{
-		for (j = 0; j < 200; j++)
+		for (j = 0; j < N; j++)
 		{
 			elem_c = 0;
-			for (r = 0; r < 200; r++)
+			for (r = 0; r < N; r++)
 			{
 				elem_c = elem_c + a[i][r] * b[r][j];
 				c[i][j] = elem_c;
@@ -52,6 +67,7 @@ int main(void)
 	}
 
 	end = clock();
-	printf("%f", end);
+	fprintf(fp, " %lf секунд\n", (end - start) / CLOCKS_PER_SEC);
+	fclose(fp);
 	return(0);
 }
