@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-const int N = 1000;																	//
+const int N = 4000;																	//
 int a[N][N], b[N][N], c[N][N], elem_c;
 int main(void)
 {

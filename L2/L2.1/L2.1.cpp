@@ -1,7 +1,15 @@
 ﻿// L2.1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+const int N = 10000;
+int m[N];
+double start, end;
+FILE* fp = NULL;
+char name[] = "2.txt";
 void shell(int* items, int count)
 {
 
@@ -48,8 +56,75 @@ void qs(int* items, int left, int right) //вызов функции: qs(items, 
     if (left < j) qs(items, left, j);
     if (i < right) qs(items, i, right);
 }
+int compare(const void* x1, const void* x2)   // функция сравнения элементов массива
+{
+    return (*(int*)x1 - *(int*)x2);              // если результат вычитания равен 0, то числа равны, < 0: x1 < x2; > 0: x1 > x2
+}
+void timesort(int* items) {
+
+    fprintf(fp, "  Сортировка Шелла\t");
+    start = clock();
+    shell(items, N);	//Сортировка Шелла
+    end = clock();
+    fprintf(fp, " %lf \n", (end - start) / CLOCKS_PER_SEC);
+
+    fprintf(fp, "  Быстрая сортировка \t");
+    start = clock();
+    qs(items, 0, N - 1);	//Быстрая сортировка
+    end = clock();
+    fprintf(fp, " %lf \n", (end - start) / CLOCKS_PER_SEC);
+
+    fprintf(fp, "  Ф-я Быстрая сортировка \t");
+        start = clock();
+    qsort(items, N, sizeof(int), compare);
+    end = clock();
+    fprintf(fp, " %lf \n", (end - start) / CLOCKS_PER_SEC);
+
+}
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    srand(time(NULL));
+
+    int i = 0, j = 0, r;
+
+    fp = fopen(name, "a");
+    if (fp != NULL) {
+        printf("Файл запущен удачно \n");
+    }
+    else {
+        printf("Ошибка!\n");
+        exit(0);
+    }
+    fprintf(fp, "  Заполнение массива рандомными числами \n");
+    for (i = 0; i < N; i++) {
+        m[i] = rand() % 100 + 1;
+    }
+    timesort(m);
+
+    fprintf(fp, "  Возрастающая последовательность \n");
+    for (i = 0; i < N; i++) {
+        m[i] = i;
+    }
+    timesort(m);
+
+    fprintf(fp, "  Убывающая последовательность \n");
+    for (i = 0; i < N; i++) {
+        m[i] = N-i;
+    }
+    timesort(m);
+
+    fprintf(fp, "  Возрастающе-убывающая последовательность \n");
+    for (i = 0; i < N/2; i++) {
+        m[i] = i;
+    }
+    for (i = N/2; i < N; i++) {
+        m[i] = N-i+1;
+    }
+    timesort(m);
+
+    fclose(fp);
+    return(0);
+    
 }
